@@ -24,9 +24,7 @@ export default function Navbar() {
   return (
     <div className="navbar bg-base-100 shadow-md md:px-8 sticky top-0 z-50">
       
-
       <div className="navbar-start">
-
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -47,8 +45,8 @@ export default function Navbar() {
           </ul>
         </div>
         
-        <Link href="/" className="btn btn-ghost text-xl font-bold text-primary tracking-wide">
-          MediQueue
+        <Link href="/" className="btn btn-ghost text-xl font-black bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 text-transparent bg-clip-text tracking-wide">
+        MediQueue
         </Link>
       </div>
       
@@ -73,13 +71,12 @@ export default function Navbar() {
         </button>
 
         {user ? (
-
           <div className="dropdown dropdown-end z-50">
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar online">
               <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                 <img 
                   alt="User Profile" 
-                  src={user?.photoURL || "https://i.ibb.co.com/vksy7zm/tutor1.jpg"} 
+                  src={user?.photoURL || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop"} 
                 />
               </div>
             </div>
@@ -100,7 +97,11 @@ export default function Navbar() {
             </ul>
           </div>
         ) : (
-          <Link href="/login" className="btn btn-primary btn-sm md:btn-md rounded-xl font-bold px-6 shadow-md hover:scale-105 transition-all">
+
+          <Link 
+            href="/login" 
+            className="text-white font-bold rounded-xl px-6 py-2.5 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-indigo-600 hover:via-purple-600 hover:to-violet-600 shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95 text-center flex items-center justify-center text-sm"
+          >
             Login
           </Link>
         )}
