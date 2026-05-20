@@ -3,7 +3,18 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { FaChalkboardTeacher, FaBookReader, FaRegClock, FaUsers, FaGraduationCap, FaAward } from "react-icons/fa";
+import { 
+  FaChalkboardTeacher, 
+  FaBookReader, 
+  FaRegClock, 
+  FaUsers, 
+  FaGraduationCap, 
+  FaAward,
+  FaCalendarAlt, 
+  FaClock, 
+  FaMapMarkerAlt, 
+  FaLaptop 
+} from "react-icons/fa";
 
 export default function TutorsSection() {
   const [tutors, setTutors] = useState([]);
@@ -13,7 +24,8 @@ export default function TutorsSection() {
     fetch("http://localhost:8000/tutors?limit=6")
       .then((res) => res.json())
       .then((data) => {
-        setTutors(data);
+        const safeData = Array.isArray(data) ? data : [];
+        setTutors(safeData);
         setLoading(false);
       })
       .catch((err) => {
@@ -63,42 +75,57 @@ export default function TutorsSection() {
               <motion.div 
                 key={tutor._id} 
                 variants={cardVariants}
-                className="card bg-base-100 shadow-xl border border-base-200 hover:shadow-2xl transition-all duration-300 flex flex-col justify-between"
+                className="card bg-base-100 shadow-xl border border-base-200 hover:shadow-2xl transition-all duration-300 flex flex-col justify-between rounded-2xl overflow-hidden"
               >
-               
+
                 <figure className="relative h-56 w-full bg-base-200 overflow-hidden">
                   <img
-                    src={tutor.photo}
-                    alt={tutor.tutorName}
+                    src={tutor.photo || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=600&auto=format&fit=crop"}
+                    alt={tutor.tutorName || "Tutor"}
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute top-3 right-3 badge badge-neutral font-semibold py-3 shadow-md">
-                    ${tutor.hourlyFee}/hr
+                    ${tutor.hourlyFee || 0}/hr
                   </div>
                 </figure>
 
                 <div className="card-body p-6 space-y-3 flex-grow">
                   <span className="text-xs font-bold text-primary tracking-wider uppercase">
-                    {tutor.subject}
+                    {tutor.subject || "General"}
                   </span>
                   <h3 className="card-title text-xl font-bold text-base-content">
-                    {tutor.tutorName}
+                    {tutor.tutorName || "Unknown Tutor"}
                   </h3>
-                  <p className="text-sm text-gray-500 line-clamp-1">
-                    🏫 {tutor.institution} ({tutor.experience} Exp)
+                  <p className="text-sm text-gray-500 flex items-center gap-1 line-clamp-1">
+                    <FaGraduationCap className="text-base" /> {tutor.institution || "N/A"} ({tutor.experience || "0 Years"} Exp)
                   </p>
                   
-                  <div className="divider my-1"></div>
+                  <div className="divider my-0"></div>
                   
                   <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-gray-400">
-                    <p>📅 <strong>Days:</strong> {tutor.availableDays}</p>
-                    <p>⏰ <strong>Slots:</strong> {tutor.totalSlot > 0 ? `${tutor.totalSlot} left` : <span className="text-red-500 font-bold">Fully Booked</span>}</p>
-                    <p>📍 <strong>City:</strong> {tutor.location}</p>
-                    <p>💻 <strong>Mode:</strong> {tutor.teachingMode}</p>
+                    <p className="flex items-center gap-1">
+                      <FaCalendarAlt className="text-primary text-sm shrink-0"/> 
+                      <span className="truncate">
+                        {Array.isArray(tutor.availableDays) ? tutor.availableDays.join(', ') : tutor.availableDays || "N/A"}
+                      </span>
+                    </p>
+                    <p className="flex items-center gap-1">
+                      <FaClock className="text-secondary text-sm shrink-0"/> 
+                      <span>
+                        {tutor.totalSlot > 0 ? `${tutor.totalSlot} left` : <span className="text-red-500 font-bold">Full</span>}
+                      </span>
+                    </p>
+                    <p className="flex items-center gap-1">
+                      <FaMapMarkerAlt className="text-accent text-sm shrink-0"/> 
+                      <span className="truncate">{tutor.location || "N/A"}</span>
+                    </p>
+                    <p className="flex items-center gap-1">
+                      <FaLaptop className="text-info text-sm shrink-0"/> 
+                      <span>{tutor.teachingMode || "Online"}</span>
+                    </p>
                   </div>
-
-                  <div className="card-actions justify-end mt-4">
-                    <Link href={`/tutors/${tutor._id}`} className="btn btn-primary btn-sm md:btn-md w-full rounded-lg font-bold">
+                  <div className="card-actions mt-2">
+                    <Link href={`/tutors/${tutor._id}`} className="btn btn-primary btn-sm w-full font-bold">
                       Book Session
                     </Link>
                   </div>

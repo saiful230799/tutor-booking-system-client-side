@@ -3,20 +3,49 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
+import { useState } from "react";
+import { signUp, signIn } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
+
     const name = e.target.name.value;
     const email = e.target.email.value;
-    const photoURL = e.target.photoURL.value;
     const password = e.target.password.value;
-    console.log("Register details:", { name, email, photoURL, password });
+    const photoURL = e.target.photoURL.value;
+    
+    const { data, error: authError } = await signUp.email({
+      email,
+      password,
+      name,
+      image: photoURL, 
+      callbackURL: "/"
+    });
+
+    setLoading(false);
+
+    if (authError) {
+      setError(authError.message || "Something went wrong!");
+    } else {
+      console.log("User registered successfully:", data);
+      router.push("/");
+    }
   };
 
-  const handleGoogleLogin = () => {
-    console.log("Google registration triggered");
+  const handleGoogleLogin = async () => {
+    setError("");
+    await signIn.social({
+      provider: "google",
+      callbackURL: "/"
+    });
   };
 
   return (
@@ -32,6 +61,12 @@ export default function RegisterPage() {
           <p className="text-sm text-gray-500">Join MediQueue to connect with top university tutors</p>
           <div className="w-16 h-1 bg-gradient-to-r from-violet-500 to-indigo-500 mx-auto rounded-full"></div>
         </div>
+
+        {error && (
+          <div className="alert alert-error text-sm py-2 rounded-xl text-white font-medium">
+            <span>{error}</span>
+          </div>
+        )}
 
         <form onSubmit={handleRegister} className="space-y-4">
           <div className="form-control">
@@ -52,7 +87,9 @@ export default function RegisterPage() {
               <span className="label-text font-semibold">Email Address</span>
             </label>
             <input 
-              type="email" 
+              type="url"
+              style={{ inputType: "email" }} 
+              type="email"
               name="email"
               placeholder="enter your email" 
               className="input input-bordered w-full pl-4 bg-base-200 focus:input-primary" 
@@ -88,9 +125,10 @@ export default function RegisterPage() {
 
           <button 
             type="submit" 
-            className="w-full text-white font-bold rounded-xl mt-4 py-3 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-indigo-600 hover:via-purple-600 hover:to-violet-600 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
+            disabled={loading}
+            className="w-full text-white font-bold rounded-xl mt-4 py-3 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-indigo-600 hover:to-violet-600 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 disabled:opacity-50"
           >
-            Sign Up
+            {loading ? "Creating Account..." : "Sign Up"}
           </button>
         </form>
 

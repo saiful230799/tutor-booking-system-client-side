@@ -3,18 +3,46 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
+import { useState } from "react";
+import { signIn } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
+
     const email = e.target.email.value;
     const password = e.target.password.value;
-    console.log("Login details:", email, password);
+    
+    const { data, error: authError } = await signIn.email({
+      email,
+      password,
+      callbackURL: "/" 
+    });
+
+    setLoading(false);
+
+    if (authError) {
+      setError(authError.message || "Invalid email or password!");
+    } else {
+      console.log("Logged in successfully:", data);
+      router.push("/");
+    }
   };
 
-  const handleGoogleLogin = () => {
-    console.log("Google login triggered");
+  const handleGoogleLogin = async () => {
+    setError("");
+
+    await signIn.social({
+      provider: "google",
+      callbackURL: "/"
+    });
   };
 
   return (
@@ -30,6 +58,12 @@ export default function LoginPage() {
           <p className="text-sm text-gray-500">Log in to book your favorite university mentor</p>
           <div className="w-16 h-1 bg-gradient-to-r from-violet-500 to-indigo-500 mx-auto rounded-full"></div>
         </div>
+
+        {error && (
+          <div className="alert alert-error text-sm py-2 rounded-xl text-white font-medium">
+            <span>{error}</span>
+          </div>
+        )}
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="form-control">
@@ -63,9 +97,10 @@ export default function LoginPage() {
 
           <button 
             type="submit" 
-            className="w-full text-white font-bold rounded-xl mt-2 py-3 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-indigo-600 hover:via-purple-600 hover:to-violet-600 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
+            disabled={loading}
+            className="w-full text-white font-bold rounded-xl mt-2 py-3 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-indigo-600 hover:to-violet-600 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 disabled:opacity-50"
           >
-            Sign In
+            {loading ? "Signing In..." : "Sign In"}
           </button>
         </form>
 
