@@ -26,19 +26,31 @@ export default function LoginPage() {
       callbackURL: "/" 
     });
 
-    setLoading(false);
-
     if (authError) {
+      setLoading(false);
       setError(authError.message || "Invalid email or password!");
     } else {
-      console.log("Logged in successfully:", data);
-      router.push("/");
+      fetch('http://localhost:8000/jwt', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ email: email })
+      })
+      .then(res => res.json())
+      .then(result => {
+          if(result.success) {
+              console.log("JWT Token generated and cookie set!");
+              router.push("/");
+          }
+      })
+      .catch(err => {
+          console.error("JWT Error:", err);
+          setLoading(false);
+      });
     }
   };
 
   const handleGoogleLogin = async () => {
     setError("");
-
     await signIn.social({
       provider: "google",
       callbackURL: "/"
@@ -64,61 +76,32 @@ export default function LoginPage() {
             <span>{error}</span>
           </div>
         )}
-
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="form-control">
             <label className="label">
               <span className="label-text font-semibold">Email Address</span>
             </label>
-            <input 
-              type="email" 
-              name="email"
-              placeholder="enter your email" 
-              className="input input-bordered w-full pl-4 bg-base-200 focus:input-primary" 
-              required 
-            />
+            <input type="email" name="email" placeholder="enter your email" className="input input-bordered w-full pl-4 bg-base-200 focus:input-primary" required />
           </div>
 
           <div className="form-control">
             <label className="label">
               <span className="label-text font-semibold">Password</span>
             </label>
-            <input 
-              type="password" 
-              name="password"
-              placeholder="••••••••" 
-              className="input input-bordered w-full pl-4 bg-base-200 focus:input-primary" 
-              required 
-            />
-            <label className="label justify-end">
-              <a href="#" className="text-xs text-purple-600 hover:underline mt-1">Forgot password?</a>
-            </label>
+            <input type="password" name="password" placeholder="••••••••" className="input input-bordered w-full pl-4 bg-base-200 focus:input-primary" required />
           </div>
 
-          <button 
-            type="submit" 
-            disabled={loading}
-            className="w-full text-white font-bold rounded-xl mt-2 py-3 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-indigo-600 hover:to-violet-600 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 disabled:opacity-50"
-          >
+          <button type="submit" disabled={loading} className="w-full text-white font-bold rounded-xl mt-2 py-3 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-indigo-600 hover:to-violet-600 transition-all duration-300 disabled:opacity-50">
             {loading ? "Signing In..." : "Sign In"}
           </button>
         </form>
 
         <div className="divider text-xs text-gray-400 uppercase tracking-wider">or continue with</div>
-
-        <button 
-          onClick={handleGoogleLogin}
-          className="btn btn-outline w-full flex items-center justify-center gap-2 hover:bg-base-content hover:text-base-100 transition-colors"
-        >
-          <FcGoogle className="text-xl" />
-          Sign in with Google
+        <button onClick={handleGoogleLogin} className="btn btn-outline w-full flex items-center justify-center gap-2">
+          <FcGoogle className="text-xl" /> Sign in with Google
         </button>
-
         <p className="text-center text-sm text-gray-500">
-          Don't have an account?{" "}
-          <Link href="/register" className="text-purple-600 font-bold hover:underline">
-            Register here
-          </Link>
+          Don't have an account? <Link href="/register" className="text-purple-600 font-bold hover:underline">Register here</Link>
         </p>
       </motion.div>
     </div>
