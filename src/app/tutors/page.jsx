@@ -76,7 +76,7 @@ export default function TutorsAllPage() {
       <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-8">
         
         <div className="text-center space-y-2">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-base-content">Find Your Perfect Tutor</h2>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-base-content">All Tutors</h2>
           <div className="w-24 h-1 bg-primary mx-auto rounded-full"></div>
           <p className="text-gray-500 max-w-md mx-auto text-sm">
             Search by name, filter by subject, or sort by hourly fees in real-time.

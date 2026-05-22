@@ -97,7 +97,7 @@ export default function TutorDetailsPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 md:px-8 py-10 mt-20">
+    <div className="max-w-4xl mx-auto px-4 md:px-4 py-6 mt-20">
       <button onClick={() => router.push("/tutors")} className="btn btn-ghost gap-2 mb-6 font-semibold">
         <FaArrowLeft /> Back to Tutors
       </button>
@@ -127,7 +127,7 @@ export default function TutorDetailsPage() {
             <div className="space-y-3 text-sm font-medium text-gray-600 dark:text-gray-300">
               <p className="flex items-center gap-3">
                 <FaGraduationCap className="text-primary text-lg shrink-0" />
-                <span>{tutor.institution || "N/A"} ({tutor.experience || "0"} Years Exp)</span>
+                <span>{tutor.institution || "N/A"} ({tutor.experience || "0"} Exp)</span>
               </p>
               <p className="flex items-center gap-3">
                 <FaCalendarAlt className="text-secondary text-lg shrink-0" />
@@ -146,7 +146,7 @@ export default function TutorDetailsPage() {
                 <span>
                   <strong>Slots Left:</strong>{" "}
                   {tutor.totalSlot > 0 ? (
-                    <span className="badge badge-success text-white font-bold">{tutor.totalSlot} available</span>
+                    <span className="badge badge-success text-warning font-bold">{tutor.totalSlot} available</span>
                   ) : (
                     <span className="badge badge-error text-white font-bold">Fully Booked</span>
                   )}

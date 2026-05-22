@@ -1,4 +1,3 @@
-// src/app/api/auth/[...better-auth]/route.js
 import { NextResponse } from "next/server";
 
 const handler = async (request) => {

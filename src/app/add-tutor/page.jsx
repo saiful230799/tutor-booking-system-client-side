@@ -91,7 +91,7 @@ export default function AddTutorPage() {
         <textarea name="experience" placeholder="Experience" className="textarea textarea-bordered w-full" required />
         <input name="location" placeholder="Location (Area/City)" className="input input-bordered w-full" required />
         
-        <select name="teachingMode" className="select select-bordered w-full" required>
+        <select name="teachingMode" className="select select-bordered w-full bg-base-100 text-base-content" required>
           <option value="Online">Online</option>
           <option value="Offline">Offline</option>
           <option value="Both">Both</option>
