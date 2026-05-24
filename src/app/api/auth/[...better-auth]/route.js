@@ -1,31 +1,37 @@
-import { NextResponse } from "next/server";
+// import { NextResponse } from "next/server";
 
-const handler = async (request) => {
-  const url = new URL(request.url);
+// const handler = async (request) => {
+//   const url = new URL(request.url);
   
-  const backendUrl = `http://localhost:8000${url.pathname}${url.search}`;
+//   const backendUrl = `http://localhost:8000${url.pathname}${url.search}`;
 
-  const headers = new Headers(request.headers);
-  headers.set("host", "localhost:8000"); 
+//   const headers = new Headers(request.headers);
+//   headers.set("host", "localhost:8000"); 
 
-  try {
-    const response = await fetch(backendUrl, {
-      method: request.method,
-      headers: headers,
-      body: request.method !== "GET" && request.method !== "HEAD" ? await request.text() : undefined,
-      redirect: "manual",
-    });
+//   try {
+//     const response = await fetch(backendUrl, {
+//       method: request.method,
+//       headers: headers,
+//       body: request.method !== "GET" && request.method !== "HEAD" ? await request.text() : undefined,
+//       redirect: "manual",
+//     });
 
-    const responseHeaders = new Headers(response.headers);
-    return new NextResponse(response.body, {
-      status: response.status,
-      statusText: response.statusText,
-      headers: responseHeaders,
-    });
-  } catch (error) {
-    console.error("Proxy error to backend:", error);
-    return NextResponse.json({ error: "Backend proxy failed" }, { status: 500 });
-  }
-};
+//     const responseHeaders = new Headers(response.headers);
+//     return new NextResponse(response.body, {
+//       status: response.status,
+//       statusText: response.statusText,
+//       headers: responseHeaders,
+//     });
+//   } catch (error) {
+//     console.error("Proxy error to backend:", error);
+//     return NextResponse.json({ error: "Backend proxy failed" }, { status: 500 });
+//   }
+// };
 
-export { handler as GET, handler as POST };
+// export { handler as GET, handler as POST };
+
+
+import { auth } from "@/lib/auth"; 
+import { toNextJsHandler } from "better-auth/next-js";
+
+export const { POST, GET } = toNextJsHandler(auth);

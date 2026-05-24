@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from "react";
-import { useSession } from "@/lib/auth-client";
+import { authClient, useSession } from "@/lib/auth-client";
 import { RxCross2 } from "react-icons/rx";
 
 
@@ -10,15 +10,29 @@ export default function MyBookingsPage() {
   const { data: session } = useSession();
   const user = session?.user;
 
-  const fetchBookings = () => {
-    if (!user?.email) return;
-    fetch(`http://localhost:8000/bookings?email=${user.email}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setBookings(data);
-        setLoading(false);
-      });
-  };
+const fetchBookings = async () => {
+  if (!user?.email) return;
+  const token = await authClient.token();
+
+  try {
+    const res = await fetch(
+      `http://localhost:8000/bookings?email=${user.email}`,
+      {
+        headers: {
+          authorization: "bearer "+token.data.token
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    setBookings(data);
+    setLoading(false);
+  } catch (error) {
+    console.error("Failed to fetch bookings:", error);
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchBookings();

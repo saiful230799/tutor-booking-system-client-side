@@ -3,11 +3,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link"; 
 import { usePathname, useRouter } from "next/navigation";
 import { FaMoon, FaSun, FaBars } from "react-icons/fa"; 
-import { useSession, signOut } from "@/lib/auth-client"; 
+import { authClient } from "@/lib/auth-client"; 
 
 export default function Navbar() {
   const [theme, setTheme] = useState("light");
-  const { data: session } = useSession(); 
+  const { data: session } = authClient.useSession(); 
   const user = session?.user; 
   const pathname = usePathname();
   const router = useRouter();
@@ -99,7 +99,7 @@ export default function Navbar() {
               <div className="divider my-1"></div>
               <li>
                 <button 
-                  onClick={() => signOut()} 
+                  onClick={async() => await authClient.signOut()} 
                   className="text-red-500 font-semibold"
                 >
                   Logout

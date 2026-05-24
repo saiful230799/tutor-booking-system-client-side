@@ -1,9 +1,9 @@
 "use client";
-import { useSession } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 import { toast } from 'react-toastify';
 
 export default function AddTutorPage() {
-  const { data: session } = useSession();
+  const { data: session } = authClient.useSession();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
